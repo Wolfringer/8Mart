@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  background: #ffe6f0;
+  font-family: Arial;
+  text-align: center;
+  padding: 50px;
+}
+.box {
+  font-size: 24px;
+}
+</style>
+</head>
+<body>
+
+<div class="box" id="compliment"></div>
+
+<script>
+const compliments = [
+"Ты очаровательна 💐",
+"Ты делаешь мир добрее",
+"С тобой приятно работать",
+"Твоя энергия заряжает",
+"Ты невероятно красива"
+];
+
+document.getElementById("compliment").innerText =
+compliments[Math.floor(Math.random() * compliments.length)];
+</script>
+
+</body>
+</html>
