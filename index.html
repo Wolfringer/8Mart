@@ -19,7 +19,18 @@ body {
     align-items: center;
 }
 
-/* Надпись */
+/* Слои лепестков */
+#petals-back,
+#petals-front {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+}
+
+#petals-back { z-index: 1; }
+#petals-front { z-index: 10; }
+
+/* Текст */
 .title {
     font-size: 30px;
     font-weight: bold;
@@ -30,7 +41,8 @@ body {
     transform: translateY(-20px);
     animation: fadeTitle 1.2s ease-out forwards;
     text-shadow: 0 0 15px rgba(216, 27, 96, 0.4);
-    z-index: 10;
+    position: relative;
+    z-index: 5;
     padding: 0 15px;
 }
 
@@ -41,11 +53,12 @@ body {
     }
 }
 
+/* Букет */
 .flower-container {
     width: 90%;
     max-width: 500px;
     position: relative;
-    z-index: 5;
+    z-index: 6;
 }
 
 .flower-container img {
@@ -63,22 +76,25 @@ body {
     }
 }
 
+/* Лепестки */
 .petal {
-    position: fixed;
-    top: -50px;
+    position: absolute;
     border-radius: 60% 40% 60% 40%;
-    pointer-events: none;
 }
 </style>
 </head>
 
 <body>
 
+<div id="petals-back"></div>
+
 <div class="title" id="randomTitle"></div>
 
 <div class="flower-container">
     <img id="randomFlower" src="" alt="Букет цветов">
 </div>
+
+<div id="petals-front"></div>
 
 <script>
 const images = [
@@ -221,11 +237,9 @@ const titles = [
     "Солнечный свет утром напоминает о твоей улыбке ☀️"
 ];
 
-// Рандом букет
 document.getElementById("randomFlower").src =
     images[Math.floor(Math.random() * images.length)];
 
-// Рандом надпись
 document.getElementById("randomTitle").textContent =
     titles[Math.floor(Math.random() * titles.length)];
 
@@ -249,7 +263,12 @@ function createPetal() {
     petal.style.height = size * 1.4 + "px";
     petal.style.background = colors[Math.floor(Math.random() * colors.length)];
     petal.style.opacity = 0.4 + Math.random() * 0.6;
-    petal.style.zIndex = Math.floor(size);
+
+    // случайный слой
+    const isFront = Math.random() > 0.5;
+    const container = isFront
+        ? document.getElementById("petals-front")
+        : document.getElementById("petals-back");
 
     let x = Math.random() * window.innerWidth;
     let y = -50;
@@ -262,7 +281,8 @@ function createPetal() {
     let angle = 0;
     let time = 0;
 
-    document.body.appendChild(petal);
+    petal.style.left = x + "px";
+    container.appendChild(petal);
 
     function animate() {
         y += speedY;
@@ -272,9 +292,9 @@ function createPetal() {
         angle += rotationSpeed;
 
         petal.style.transform =
-            `translate(${x + offsetX}px, ${y}px) rotate(${angle}deg)`;
+            `translate(${offsetX}px, ${y}px) rotate(${angle}deg)`;
 
-        if (y < window.innerHeight + 50) {
+        if (y < window.innerHeight + 60) {
             requestAnimationFrame(animate);
         } else {
             petal.remove();
