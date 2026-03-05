@@ -63,13 +63,16 @@ body {
 
 .flower-container img {
     width: 100%;
-    opacity: 0;
+    display: none;
     transform: scale(0.85);
-    animation: fadeIn 1.2s ease-out forwards;
     filter: drop-shadow(0 0 25px rgba(255, 105, 180, 0.5));
 }
 
 @keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
     to {
         opacity: 1;
         transform: scale(1);
@@ -237,11 +240,21 @@ const titles = [
     "Солнечный свет утром напоминает о твоей улыбке ☀️"
 ];
 
-document.getElementById("randomFlower").src =
-    images[Math.floor(Math.random() * images.length)];
-
 document.getElementById("randomTitle").textContent =
     titles[Math.floor(Math.random() * titles.length)];
+
+// Правильная загрузка картинки
+const imgElement = document.getElementById("randomFlower");
+const randomImage = images[Math.floor(Math.random() * images.length)];
+
+const img = new Image();
+img.src = randomImage;
+
+img.onload = function() {
+imgElement.src = randomImage;
+imgElement.style.display = "block";
+imgElement.style.animation = "fadeIn 1.2s ease-out forwards";
+};
 
 const colors = [
     "#ff6fa5",
